@@ -1,69 +1,51 @@
-import throttle from 'lodash.throttle'; // импорт тротла
+import throttle from 'lodash.throttle'; // імпорт
 
-const STORAGE_KEY = 'feedback-form-state'; // вынести в константу
+const STORAGE_KEY = 'feedback-form-state'; // константа - ключ для сховища
 
 const refs = {
   form: document.querySelector('.feedback-form'),
   email: document.querySelector('.feedback-form input'),
   textarea: document.querySelector('.feedback-form  textarea'),
 };
-//console.log(refs.textarea);
-// console.log(refs.email);
 
-// refs.textarea.addEventListener('input', throttle(saveValue, 500));
+refs.textarea.addEventListener('input', throttle(saveData, 500));
 refs.form.addEventListener('submit', onFormSubmit);
-//refs.email.addEventListener('input', throttle(saveValue, 500));
+refs.email.addEventListener('input', throttle(saveData, 500));
 
-// function saveValue(e) {
-// formData[e.target.name] = e.target.value;
-// save(STORAGE_KEY, JSON.stringify(formData));
-// }
+populateInput();
 
 const formData = {};
-refs.form.addEventListener('input', e => {
-  //   console.log(e.target.name);
-  //   console.log(e.target.value);
 
-  formData[e.target.name] = e.target.value;
+function saveData(evt) {
+  formData[evt.target.name] = evt.target.value;
 
-  console.log(formData);
+//   console.log(formData);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-  
-});
-
-function onFormSubmit(evt) {
-  evt.preventDefault(); // не перезагружать страницу
-
-  console.log('Отправляем форму');
-  evt.currentTarget.reset(); // очистить форму при отправке данных - при нажатии кнопки ОТПРАВИТЬ
-  localStorage.removeItem(STORAGE_KEY); // очистка хранилища при отправке формы
 }
 
-// function onTextareaInput(evt) {
-//   const message = evt.target.value; //возьми текущий меседж
+function onFormSubmit(evt) {
+  evt.preventDefault(); // не перегружати сторінку
 
-//   localStorage.setItem(STORAGE_KEY, message); // помести его в хранилище
-// }
+    const sendData = localStorage.getItem(STORAGE_KEY);
+    
+    console.log(JSON.parse(sendData));
+    
+  evt.currentTarget.reset(); // очистити форму при відправці даних
 
-/*
- * - Получаем значение из хранилища
- * - Если там что-то было, обновляем DOM
- */
+  localStorage.removeItem(STORAGE_KEY); // очистка сховища після відправки
+}
 
-populateTextarea();
-function populateTextarea() {
-  const savedMessage = localStorage.getItem(STORAGE_KEY); // возьми данные из хранилища
-    console.log(JSON.parse(savedMessage))
-    const obj = JSON.parse(savedMessage);
-    console.log(obj.email);
-    console.log(obj.message);
+// отримати дані зі сховища
 
-  // надо проверить есть ли в хранилище чтото.
-    if (savedMessage) {
-        refs.email.value = obj.email;
-        refs.textarea.value = obj.message;
+function populateInput() {
+  const savedMessage = localStorage.getItem(STORAGE_KEY); // візьми дані зі сховища
+  const obj = JSON.parse(savedMessage);
 
-    //refs.form.value = savedMessage; // Если там что-то было, обновляем DOM
+  // перевірка на наявність даних у сховищі
+  if (savedMessage) {
+    refs.email.value = obj.email;
+    refs.textarea.value = obj.message;
+
   }
 }
 
@@ -77,51 +59,3 @@ function populateTextarea() {
 //     Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт з полями email, message та їхніми поточними значеннями.
 //     Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500 мілісекунд. Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
 
-// import { save, getItemKey, removeKey } from './storage.js';
-// import throttle from 'lodash.throttle';
-// const FEEDBACK_FORM_STATE = 'feedback-form-state';
-// let formData = getItemKey(FEEDBACK_FORM_STATE) || {};
-
-// const form = document.querySelector('.feedback-form');
-
-// form.addEventListener('input', throttle(saveValue, 500));
-
-// function saveValue(e) {
-//   formData[e.target.name] = e.target.value;
-//   save(FEEDBACK_FORM_STATE, JSON.stringify(formData));
-// }
-
-// // localStorage
-
-// localStorageValue();
-
-// function localStorageValue() {
-//   const proverka = getItemKey(FEEDBACK_FORM_STATE);
-//   if (proverka) {
-//     if (proverka.email) {
-//       form.email.value = proverka.email;
-//     }
-//     if (proverka.message) {
-//       form.message.value = proverka.message;
-//     }
-//   }
-// }
-
-// // SABMIT;
-
-// form.addEventListener('submit', handleSubmit);
-
-// function handleSubmit(e) {
-//   e.preventDefault();
-//   const {
-//     elements: { email, message },
-//   } = e.currentTarget;
-
-//   if (email.value === '' || message.value === '') {
-//     return alert('Please fill in all the fields!');
-//   }
-//   removeKey(FEEDBACK_FORM_STATE);
-//   const formData = new FormData(form);
-//   const valuesFotm = Object.fromEntries(formData.entries());
-//   e.currentTarget.reset();
-// }
