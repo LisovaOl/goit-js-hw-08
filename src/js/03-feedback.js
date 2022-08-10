@@ -1,5 +1,4 @@
 import throttle from 'lodash.throttle'; // імпорт
-
 const STORAGE_KEY = 'feedback-form-state'; // константа - ключ для сховища
 
 const refs = {
