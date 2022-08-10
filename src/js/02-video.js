@@ -21,7 +21,7 @@ const currentTimeVideo = JSON.parse(
   localStorage.getItem(VIDEOPLAYER_CURRENT_TIME)
 );
 
-// console.log(currentTimeVideo);
+console.log(currentTimeVideo);
 
 player.setCurrentTime(currentTimeVideo); // відтворення збереженого часу після перезавантаження
 
