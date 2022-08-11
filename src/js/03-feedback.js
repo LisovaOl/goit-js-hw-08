@@ -18,24 +18,30 @@ const formData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 function saveData(evt) {
   formData[evt.target.name] = evt.target.value;
 
-//   console.log(formData);
+  //   console.log(formData);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
 }
 
 function onFormSubmit(evt) {
   evt.preventDefault(); // не перегружати сторінку
+  const {
+    elements: { email, message },
+  } = evt.currentTarget;
 
-  const sendData = localStorage.getItem(STORAGE_KEY);
+  if (email.value === '' || message.value === '') {
+    return alert('Заповніть всі поля, будь ласка!');
+  }
 
-  console.log(JSON.parse(sendData));
+  // const sendData = localStorage.getItem(STORAGE_KEY);
+  // console.log(JSON.parse(sendData));
+
+  console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
 
   evt.currentTarget.reset(); // очистити форму при відправці даних
 
   localStorage.removeItem(STORAGE_KEY); // очистка сховища після відправки
-  // console.log(formData.email);
-  // console.log(formData.message);
 
-// очищення даних в об'єкті
+  // очищення даних в об'єкті
   delete formData.email;
   delete formData.message;
 }
@@ -50,7 +56,6 @@ function populateInput() {
   if (savedMessage) {
     refs.email.value = obj.email || '';
     refs.textarea.value = obj.message || '';
-
   }
 }
 
@@ -63,4 +68,3 @@ function populateInput() {
 //     Під час завантаження сторінки перевіряй стан сховища, і якщо там є збережені дані, заповнюй ними поля форми. В іншому випадку поля повинні бути порожніми.
 //     Під час сабміту форми очищуй сховище і поля форми, а також виводь у консоль об'єкт з полями email, message та їхніми поточними значеннями.
 //     Зроби так, щоб сховище оновлювалось не частіше, ніж раз на 500 мілісекунд. Для цього додай до проекту і використовуй бібліотеку lodash.throttle.
-
