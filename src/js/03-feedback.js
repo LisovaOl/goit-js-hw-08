@@ -13,7 +13,7 @@ refs.email.addEventListener('input', throttle(saveData, 500));
 
 populateInput();
 
-const formData = {};
+const formData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
 function saveData(evt) {
   formData[evt.target.name] = evt.target.value;
@@ -25,13 +25,19 @@ function saveData(evt) {
 function onFormSubmit(evt) {
   evt.preventDefault(); // не перегружати сторінку
 
-    const sendData = localStorage.getItem(STORAGE_KEY);
-    
-    console.log(JSON.parse(sendData));
-    
+  const sendData = localStorage.getItem(STORAGE_KEY);
+
+  console.log(JSON.parse(sendData));
+
   evt.currentTarget.reset(); // очистити форму при відправці даних
 
   localStorage.removeItem(STORAGE_KEY); // очистка сховища після відправки
+  // console.log(formData.email);
+  // console.log(formData.message);
+
+// очищення даних в об'єкті
+  delete formData.email;
+  delete formData.message;
 }
 
 // отримати дані зі сховища
@@ -42,8 +48,8 @@ function populateInput() {
 
   // перевірка на наявність даних у сховищі
   if (savedMessage) {
-    refs.email.value = obj.email;
-    refs.textarea.value = obj.message;
+    refs.email.value = obj.email || '';
+    refs.textarea.value = obj.message || '';
 
   }
 }
